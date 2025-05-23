@@ -1,12 +1,12 @@
 // ======== CLAVES ========
-let clavesDisponibles = ['ABC123', 'XYZ789', 'CLAVE1', 'SUPER8', 'UNICA5', 'GATOS1'];
+let clavesDisponibles = JSON.parse(localStorage.getItem('clavesRestantes')) || ['ABC123', 'XYZ789', 'CLAVE1', 'SUPER8', 'UNICA5'];
 let claveUsada = localStorage.getItem('claveUsada');
 
 // Mostrar pantalla correcta según clave
 window.onload = () => {
   if (claveUsada) {
     mostrarPantalla(1);
-    cargarDatos();
+    actualizarLista(); // recarga nombres guardados
   } else {
     document.getElementById('clavePantalla').classList.add('activa');
   }
@@ -19,8 +19,10 @@ function validarClave() {
   if (clavesDisponibles.includes(input)) {
     clavesDisponibles = clavesDisponibles.filter(c => c !== input);
     localStorage.setItem('claveUsada', input);
+    localStorage.setItem('clavesRestantes', JSON.stringify(clavesDisponibles));
     document.getElementById('clavePantalla').classList.remove('activa');
     mostrarPantalla(1);
+    actualizarLista();
   } else {
     error.textContent = 'Clave inválida o ya usada.';
   }
@@ -54,9 +56,7 @@ function actualizarLista() {
     li.textContent = `${i + 1} - ${n}`;
     lista.appendChild(li);
   });
-  if (nombres.length >= 8) {
-    nombreInput.disabled = true;
-  }
+  nombreInput.disabled = nombres.length >= 8;
 }
 
 // ======== PANTALLAS ========
@@ -92,7 +92,7 @@ function crearTablaPartidos() {
     const nombresP = `${nombres[p[0]]} y ${nombres[p[1]]} vs ${nombres[p[2]]} y ${nombres[p[3]]}`;
     const parrafo = document.createElement('p');
     parrafo.innerHTML = `P${i + 1}: <span>${nombresP}</span>`;
-    
+
     const input1 = document.createElement('input');
     const input2 = document.createElement('input');
     input1.type = input2.type = 'number';
