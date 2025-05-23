@@ -1,12 +1,12 @@
 // ======== CLAVES ========
-let clavesDisponibles = JSON.parse(localStorage.getItem('clavesRestantes')) || ['ABC123', 'XYZ789', 'CLAVE1', 'SUPER8', 'UNICA5'];
+const clavesDisponibles = ['ABC123', 'XYZ789', 'CLAVE1', 'SUPER8', 'UNICA5', 'GATOS1];
 let claveUsada = localStorage.getItem('claveUsada');
 
 // Mostrar pantalla correcta según clave
 window.onload = () => {
   if (claveUsada) {
     mostrarPantalla(1);
-    actualizarLista(); // recarga nombres guardados
+    cargarDatos();
   } else {
     document.getElementById('clavePantalla').classList.add('activa');
   }
@@ -14,15 +14,14 @@ window.onload = () => {
 
 // Validar clave
 function validarClave() {
-  const input = document.getElementById('claveInput').value;
+  const input = document.getElementById('claveInput').value.trim();
   const error = document.getElementById('claveError');
+
   if (clavesDisponibles.includes(input)) {
-    clavesDisponibles = clavesDisponibles.filter(c => c !== input);
     localStorage.setItem('claveUsada', input);
-    localStorage.setItem('clavesRestantes', JSON.stringify(clavesDisponibles));
+    claveUsada = input;
     document.getElementById('clavePantalla').classList.remove('activa');
     mostrarPantalla(1);
-    actualizarLista();
   } else {
     error.textContent = 'Clave inválida o ya usada.';
   }
@@ -56,7 +55,9 @@ function actualizarLista() {
     li.textContent = `${i + 1} - ${n}`;
     lista.appendChild(li);
   });
-  nombreInput.disabled = nombres.length >= 8;
+  if (nombres.length >= 8) {
+    nombreInput.disabled = true;
+  }
 }
 
 // ======== PANTALLAS ========
@@ -92,7 +93,7 @@ function crearTablaPartidos() {
     const nombresP = `${nombres[p[0]]} y ${nombres[p[1]]} vs ${nombres[p[2]]} y ${nombres[p[3]]}`;
     const parrafo = document.createElement('p');
     parrafo.innerHTML = `P${i + 1}: <span>${nombresP}</span>`;
-
+    
     const input1 = document.createElement('input');
     const input2 = document.createElement('input');
     input1.type = input2.type = 'number';
@@ -168,10 +169,18 @@ function mostrarCampeon() {
 // ======== RESET ========
 function resetearTodo() {
   localStorage.clear();
+  claveUsada = null;
   nombres = [];
   resultados = Array(partidos.length).fill(["", ""]);
   nombreInput.disabled = false;
   actualizarLista();
   document.getElementById('nombreInput').value = '';
-  mostrarPantalla(1);
+  mostrarPantalla(0); // Mostrar pantalla de clave
+  document.getElementById('clavePantalla').classList.add('activa');
 }
+
+// ======== CARGAR DATOS ========
+function cargarDatos() {
+  actualizarLista();
+}
+
