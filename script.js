@@ -1,5 +1,5 @@
 // ======== CLAVES ========
-const clavesDisponibles = ['ABC123', 'XYZ789', 'CLAVE1', 'SUPER8', 'UNICA5', 'GATOS1];
+let clavesDisponibles = ['ABC123', 'XYZ789', 'CLAVE1', 'SUPER8', 'UNICA5'];
 let claveUsada = localStorage.getItem('claveUsada');
 
 // Mostrar pantalla correcta según clave
@@ -14,12 +14,11 @@ window.onload = () => {
 
 // Validar clave
 function validarClave() {
-  const input = document.getElementById('claveInput').value.trim();
+  const input = document.getElementById('claveInput').value;
   const error = document.getElementById('claveError');
-
   if (clavesDisponibles.includes(input)) {
+    clavesDisponibles = clavesDisponibles.filter(c => c !== input);
     localStorage.setItem('claveUsada', input);
-    claveUsada = input;
     document.getElementById('clavePantalla').classList.remove('activa');
     mostrarPantalla(1);
   } else {
@@ -169,18 +168,10 @@ function mostrarCampeon() {
 // ======== RESET ========
 function resetearTodo() {
   localStorage.clear();
-  claveUsada = null;
   nombres = [];
   resultados = Array(partidos.length).fill(["", ""]);
   nombreInput.disabled = false;
   actualizarLista();
   document.getElementById('nombreInput').value = '';
-  mostrarPantalla(0); // Mostrar pantalla de clave
-  document.getElementById('clavePantalla').classList.add('activa');
+  mostrarPantalla(1);
 }
-
-// ======== CARGAR DATOS ========
-function cargarDatos() {
-  actualizarLista();
-}
-
