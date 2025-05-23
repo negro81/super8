@@ -64,11 +64,9 @@ function cargarNombres() {
 
 // ======== PANTALLAS ========
 function mostrarPantalla(n) {
-  // oculta todas
   ['pantalla1','pantalla2','pantalla3','pantalla4'].forEach(id => {
     document.getElementById(id).classList.remove('activa');
   });
-  // muestra la requerida
   document.getElementById('pantalla' + n).classList.add('activa');
   if (n === 2) crearTablaPartidos();
   if (n === 3) calcularPosiciones();
@@ -139,11 +137,8 @@ function calcularPosiciones() {
   partidos.forEach((p,i) => {
     const r = resultados[i].map(x=>parseInt(x)||0);
     const [a,b,c,d] = p.map(j=>nombres[j]);
-    if (r[0] > r[1]) {
-      tabla[a].p++; tabla[b].p++;
-    } else if (r[1] > r[0]) {
-      tabla[c].p++; tabla[d].p++;
-    }
+    if (r[0] > r[1]) { tabla[a].p++; tabla[b].p++; }
+    else if (r[1] > r[0]) { tabla[c].p++; tabla[d].p++; }
     tabla[a].d += r[0]-r[1];
     tabla[b].d += r[0]-r[1];
     tabla[c].d += r[1]-r[0];
@@ -165,12 +160,20 @@ function calcularPosiciones() {
 
 // ======== CAMPEÓN ========
 function mostrarCampeon() {
-  const table = document.querySelectorAll('#tablaPosiciones tr.primero td')[0];
-  document.getElementById('campeonTexto').textContent = `🏆 El campeón es ${table.textContent} 🏆`;
+  const ganador = document.querySelector('#tablaPosiciones tr.primero td').textContent;
+  document.getElementById('campeonTexto').textContent = `🏆 El campeón es ${ganador} 🏆`;
 }
 
 // ======== RESET ========
 function resetearTodo() {
-  localStorage.clear();
+  // Guardar la clave usada
+  const clave = localStorage.getItem('claveUsada');
+  // Borrar solo datos de torneo
+  localStorage.removeItem('nombres');
+  localStorage.removeItem('resultados');
+  localStorage.removeItem('tablaOrden');
+  // Restaurar la clave
+  if (clave) localStorage.setItem('claveUsada', clave);
+  // Recargar para reiniciar pantallas y datos
   location.reload();
 }
