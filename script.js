@@ -2,6 +2,7 @@
 let clavesDisponibles = ['ABC123', 'XYZ789', 'CLAVE1', 'SUPER8', 'UNICA5'];
 let claveUsada = localStorage.getItem('claveUsada');
 
+// Mostrar pantalla correcta según clave
 window.onload = () => {
   if (claveUsada) {
     mostrarPantalla(1);
@@ -11,6 +12,7 @@ window.onload = () => {
   }
 };
 
+// Validar clave
 function validarClave() {
   const input = document.getElementById('claveInput').value;
   const error = document.getElementById('claveError');
@@ -92,9 +94,8 @@ function crearTablaPartidos() {
   partidos.forEach((p, i) => {
     const nombresP = `${nombres[p[0]]} y ${nombres[p[1]]} vs ${nombres[p[2]]} y ${nombres[p[3]]}`;
     const parrafo = document.createElement('p');
-    parrafo.classList.add('partido-bloque');
     parrafo.innerHTML = `P${i + 1}: <span>${nombresP}</span>`;
-
+    
     const input1 = document.createElement('input');
     const input2 = document.createElement('input');
     input1.type = input2.type = 'number';
@@ -169,13 +170,24 @@ function mostrarCampeon() {
 
 // ======== RESET ========
 function resetearTodo() {
+  // Guardamos la clave usada
   const clave = localStorage.getItem('claveUsada');
+
+  // Borramos solo los datos del torneo
   localStorage.removeItem('nombres');
   localStorage.removeItem('resultados');
   localStorage.removeItem('tablaOrden');
+
+  // Restauramos la clave usada en storage
   if (clave) localStorage.setItem('claveUsada', clave);
+
+  // Limpiamos variables en memoria
   nombres = [];
   resultados = Array(partidos.length).fill(["", ""]);
+
+  // Actualizamos la lista de nombres vacía
   actualizarLista();
+
+  // Volvemos a la pantalla 1 (sin borrar la clave)
   mostrarPantalla(1);
 }
