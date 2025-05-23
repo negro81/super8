@@ -1,5 +1,5 @@
 // ======== CLAVES ========
-let clavesDisponibles = ['ABC123', 'XYZ789', 'CLAVE1', 'SUPER8', 'UNICA5'];
+let clavesDisponibles = ['ABC123', 'XYZ789', 'CLAVE1', 'SUPER8', 'UNICA5', 'GATOS1'];
 let claveUsada = localStorage.getItem('claveUsada');
 
 // Mostrar pantalla correcta según clave
